@@ -30,7 +30,6 @@ setup(
       packages=find_packages('src'),
       package_dir={'': 'src'},
       install_requires=['wrapt'],
-      package_data={"sbt_utils": ["py.typed"],
-                    "wrapt-stubs": ["decorators.pyi", "__init__.pyi"]},
+      package_data={"sbt_utils": ["py.typed"]},
       zip_safe=False
      )
