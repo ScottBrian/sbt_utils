@@ -3,18 +3,18 @@ sbt-utils
 =========
 
 The sbt-utils package contains a function wrapper that will print the start
-time in a header flower, invoke the function, and then print the stop time
+time in a header flower box, invoke the function, and then print the stop time
 and elapsed time in a trailing flower box.
 
 >>> aFunc2()
-**********************************************
-* Starting func1 on Tue May 12 2020 20:35:06 *
-**********************************************
+***********************************************
+* Starting aFunc2 on Tue May 12 2020 20:35:06 *
+***********************************************
 2 * 3 = 6
-********************************************
-* Ending func1 on Tue May 12 2020 20:35:07 *
-* Elapsed time: 0:00:01.000196             *
-********************************************
+*********************************************
+* Ending aFunc2 on Tue May 12 2020 20:35:07 *
+* Elapsed time: 0:00:01.000196              *
+*********************************************
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -26,7 +26,7 @@ The flower_box.py module contains one importable item:
    
 The time_hdr.py module contains two importable items:
 
-1. StartStopHeader class - has with two functions that will repectively print
+1. StartStopHeader class - has two functions that will repectively print
    a starting time message in a flower box, and an ending time and elapsed
    wall clock time message in a flower box.
 2. time_box decorator - wraps a function and uses the StartStopHeader to
@@ -88,14 +88,14 @@ wrap a function with time_box
 ...      time.sleep(1)
 
 >>> aFunc2()
-**********************************************
-* Starting func1 on Tue May 12 2020 20:35:06 *
-**********************************************
+***********************************************
+* Starting aFunc2 on Tue May 12 2020 20:35:06 *
+***********************************************
 2 * 3 = 6
-********************************************
-* Ending func1 on Tue May 12 2020 20:35:07 *
-* Elapsed time: 0:00:01.000196             *
-********************************************
+*********************************************
+* Ending aFunc2 on Tue May 12 2020 20:35:07 *
+* Elapsed time: 0:00:01.000196              *
+*********************************************
 
 Development setup
 =================
@@ -111,7 +111,7 @@ Release History
 Meta
 ====
 
-Scott Tuttle - sbtuttle@outlook.com
+Scott Tuttle
 
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
