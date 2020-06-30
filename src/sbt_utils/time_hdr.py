@@ -15,135 +15,169 @@ The time_hdr module contains two items:
    print the starting and ending time headers.
 
 
-Example for StartStopHeader
-
-Notes:
-    1)the example output shows elipses for where the date or elapsed time will
-      appear in order to allow the doctest to succeed. The actual output will
-      show a date (and elapsed time for the end message) such as in the
-      following:
-***********************************************
-* Starting aFunc1 on Tue Apr 14 2020 18:59:43 *
-***********************************************
-
-    2) the examples show file=sys.stdout being specified even though that is
-       the default. This is done to allow doctest to succeed.
+Example 1: StartStopHeader
 
 >>> from sbt_utils.time_hdr import StartStopHeader
 >>> import time
->>> import sys
 
->>> def aFunc1():
+>>> def aFunc1() -> None:
 ...      print('2 + 2 =', 2+2)
 ...      time.sleep(2)
 
 >>> hdr = StartStopHeader('aFunc1')
->>> hdr.print_start_msg(file=sys.stdout)
+>>> hdr.print_start_msg()
 <BLANKLINE>
 ***********************************************
-* Starting aFunc1 on ...
+* Starting aFunc1 on Mon Jun 29 2020 18:22:48 *
 ***********************************************
 >>> aFunc1()
 2 + 2 = 4
->>> hdr.print_end_msg(file=sys.stdout)
+>>> hdr.print_end_msg()
 <BLANKLINE>
 *********************************************
-* Ending aFunc1 on ...
-* Elapsed time: ...
+* Ending aFunc1 on Mon Jun 29 2020 18:22:50 *
+* Elapsed time: 0:00:02.001842              *
 *********************************************
 
 
-Example for time_box decorator:
+Example 2: time_box decorator
 
 >>> from sbt_utils.time_hdr import time_box
 >>> import time
->>> import sys
 
->>> @time_box(file=sys.stdout)
-... def aFunc2():
+>>> @time_box
+... def aFunc2() -> None:
 ...      print('2 * 3 =', 2*3)
 ...      time.sleep(1)
 
 >>> aFunc2()
 <BLANKLINE>
 ***********************************************
-* Starting aFunc2 on ...
+* Starting aFunc2 on Mon Jun 29 2020 18:22:50 *
 ***********************************************
 2 * 3 = 6
 <BLANKLINE>
 *********************************************
-* Ending aFunc2 on ...
-* Elapsed time: ...
+* Ending aFunc2 on Mon Jun 29 2020 18:22:51 *
+* Elapsed time: 0:00:01.001204              *
 *********************************************
+
 
 time_box accepts optional parameters:
     end - default is '\n' - propagated to the print statements
     file - default is sys.stdout - propagated to the print statemnents
     flush - default is False - propagated to the print statements
+    dt_format - used to specify the datetime format
     time_box_enabed - default True - when True, return the wrapped function,
                                      when False, return the function unwrapped
 
-Example of printing to stderr:
+Example 3: printing to stderr
 
 note: the examples only show the output going to stdout
 
->>> from sbt_utils.time_hdr import time_box
->>> import sys
->>> @time_box(file=sys.stderr)
-... def func1():
-...      print('this text printed to stdout, not stderr')
-
->>> func1()
+##################
+***********************************************
+* Starting aFunc3 on Mon Jun 29 2020 18:22:51 *
+***********************************************
 this text printed to stdout, not stderr
 
-Example of statically wrapping function with time_box:
+*********************************************
+* Ending aFunc3 on Mon Jun 29 2020 18:22:51 *
+* Elapsed time: 0:00:00.000131              *
+*********************************************
+########################
+
+>>> from sbt_utils.time_hdr import time_box
+>>> import sys
+
+>>> @time_box(file=sys.stderr)
+... def aFunc3() -> None:
+...      print('this text printed to stdout, not stderr')
+
+>>> aFunc3()
+this text printed to stdout, not stderr
+
+
+Example 4: statically wrapping function with time_box
+
+>>> from sbt_utils.time_hdr import time_box
+
 >>> _tbe = False
->>> @time_box(time_box_enabled = _tbe, file=sys.stdout)
-... def func1():
+
+>>> @time_box(time_box_enabled=_tbe)
+... def aFunc4a() -> None:
 ...      print('this is sample text for _tbe = False static example')
 
->>> func1() # func1 is not wrapped by time box
+>>> aFunc4a()  # aFunc4a is not wrapped by time box
 this is sample text for _tbe = False static example
 
 >>> _tbe = True
->>> @time_box(time_box_enabled = _tbe, file=sys.stdout)
-... def func1():
+
+>>> @time_box(time_box_enabled=_tbe)
+... def aFunc4b() -> None:
 ...      print('this is sample text for _tbe = True static example')
 
->>> func1() # func1 is wrapped by time box
+>>> aFunc4b()  # aFunc4b is wrapped by time box
 <BLANKLINE>
-**********************************************
-* Starting func1 on ...
-**********************************************
+************************************************
+* Starting aFunc4b on Mon Jun 29 2020 18:22:51 *
+************************************************
 this is sample text for _tbe = True static example
 <BLANKLINE>
-********************************************
-* Ending func1 on ...
-* Elapsed time: ...
-********************************************
+**********************************************
+* Ending aFunc4b on Mon Jun 29 2020 18:22:51 *
+* Elapsed time: 0:00:00.000133               *
+**********************************************
 
-Example of dynamically wrapping function with time_box:
+
+Example 5: dynamically wrapping function with time_box:
+
+>>> from sbt_utils.time_hdr import time_box
+
 >>> _tbe = True
->>> def tbe(): return _tbe
->>> @time_box(time_box_enabled = tbe, file=sys.stdout)
-... def func3():
+>>> def tbe() -> bool: return _tbe
+
+>>> @time_box(time_box_enabled=tbe)
+... def aFunc5() -> None:
 ...      print('this is sample text for the tbe dynamic example')
 
->>> func3() # func1 is wrapped by time box
+>>> aFunc5()  # aFunc5 is wrapped by time box
 <BLANKLINE>
-**********************************************
-* Starting func3 on ...
-**********************************************
+***********************************************
+* Starting aFunc5 on Mon Jun 29 2020 18:22:51 *
+***********************************************
 this is sample text for the tbe dynamic example
 <BLANKLINE>
-********************************************
-* Ending func3 on ...
-* Elapsed time: ...
-********************************************
+*********************************************
+* Ending aFunc5 on Mon Jun 29 2020 18:22:51 *
+* Elapsed time: 0:00:00.000130              *
+*********************************************
 
 >>> _tbe = False
->>> func3() # func3 is not wrapped by time_box
+>>> aFunc5()  # aFunc5 is not wrapped by time_box
 this is sample text for the tbe dynamic example
+
+
+Example 6: specifying a datetime format:
+
+>>> from sbt_utils.time_hdr import time_box
+
+>>> aDatetime_format: DT_Format = '%m/%d/%y %H:%M:%S'
+>>> @time_box(dt_format=aDatetime_format)
+... def aFunc6() -> None:
+...     print('this is sample text for the datetime format example')
+
+>>> aFunc6()
+<BLANKLINE>
+****************************************
+* Starting aFunc6 on 06/30/20 17:07:48 *
+****************************************
+this is sample text for the datetime format example
+<BLANKLINE>
+**************************************
+* Ending aFunc6 on 06/30/20 17:07:48 *
+* Elapsed time: 0:00:00.000073       *
+**************************************
 
 
 time_box imports functools, sys, datetime, and wrapt
@@ -159,6 +193,7 @@ from typing import Any, Callable, cast, Dict, NewType, Optional, \
 from typing import overload
 
 from sbt_utils.flower_box import print_flower_box_msg
+
 from wrapt.decorators import decorator
 
 DT_Format = NewType('DT_Format', str)
@@ -189,8 +224,21 @@ class StartStopHeader():
         self.end_DT: datetime = datetime.min
 
     def print_start_msg(self, dt_format: DT_Format = default_dt_format,
-                        end: str = '\n', file: Any = sys.stdout,
+                        end: str = '\n',
+                        file: Optional[Any] = None,
                         flush: bool = False) -> None:
+        """the following code that sets file to sys.stdout is needed to allow
+        the test cases to use the pytest capsys built-in fixture. Having
+        sys.stdout as the default parameter in the function definition does
+        not work because capsys changes sys.stdout after the test case gets
+        control, meaning the print statements in StartStopHeader code are not
+        captured. This is also appears to be the case for doctest.
+        So, we simply use None as the default and set file to sys.stdout here
+        which works fine.
+        """
+        if file is None:
+            file = sys.stdout
+
         self.start_DT = datetime.now()
         file_text = ''
         # if file == sys.stderr:
@@ -204,8 +252,21 @@ class StartStopHeader():
         print_flower_box_msg([msg], end=end, file=file, flush=flush)
 
     def print_end_msg(self, dt_format: DT_Format = default_dt_format,
-                      end: str = '\n', file: Any = sys.stdout,
+                      end: str = '\n',
+                      file: Optional[Any] = None,
                       flush: bool = False) -> None:
+        """the following code that sets file to sys.stdout is needed to allow
+        the test cases to use the pytest capsys built-in fixture. Having
+        sys.stdout as the default parameter in the function definition does
+        not work because capsys changes sys.stdout after the test case gets
+        control, meaning the print statements in StartStopHeader code are not
+        captured. This is also appears to be the case for doctest.
+        So, we simply use None as the default and set file to sys.stdout here
+        which works fine.
+        """
+        if file is None:
+            file = sys.stdout
+
         self.end_DT = datetime.now()
         msg1 = 'Ending ' + self.func_name + ' on '\
             + self.end_DT.strftime(dt_format)
@@ -321,6 +382,7 @@ def time_box(wrapped: Optional[F] = None, *,
     as the default parameter in the function definition does not work
     because capsys changes sys.stdout after the test case gets control,
     meaning the print statements in StartStopHeader code are not captured.
+    This is also appears to be the case for doctest.
     So, we simply use None as the default and set file to sys.stdout here
     which works fine.
     """

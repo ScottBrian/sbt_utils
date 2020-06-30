@@ -103,6 +103,15 @@ def style_num(request: Any) -> int:
     return cast(int, request.param)
 
 
+file_num_list = [0, 1, 2, 3]
+
+
+@pytest.fixture(params=file_num_list)  # type: ignore
+def file_num(request: Any) -> int:
+    """Using different file arg"""
+    return cast(int, request.param)
+
+
 class TestStartStopHeader():
 
     @pytest.fixture(scope='class')  # type: ignore
@@ -110,23 +119,56 @@ class TestStartStopHeader():
         return StartStopHeader('TestName')
 
     def test_print_start_msg(self, hdr: "StartStopHeader", capsys: Any,
+                             file_num: int,
                              dt_format: DT_Format) -> None:
 
-        hdr.print_start_msg(dt_format=dt_format,
-                            end='\n', file=sys.stdout, flush=False)
-        captured = capsys.readouterr()
+        if file_num == 0:
+            hdr.print_start_msg(dt_format=dt_format,
+                                end='\n', flush=False)
+            captured = capsys.readouterr().out
+        elif file_num == 1:
+            hdr.print_start_msg(dt_format=dt_format,
+                                file=None,
+                                end='\n', flush=False)
+            captured = capsys.readouterr().out
+        elif file_num == 2:
+            hdr.print_start_msg(dt_format=dt_format,
+                                end='\n', file=sys.stdout, flush=False)
+            captured = capsys.readouterr().out
+        else:
+            hdr.print_start_msg(dt_format=dt_format,
+                                end='\n', file=sys.stderr, flush=False)
+            captured = capsys.readouterr().err
+
         start_DT = hdr.start_DT
         formatted_DT = start_DT.strftime(dt_format)
         msg = '* Starting TestName on ' + formatted_DT + ' *'
         flowers = '*' * len(msg)
         expected = '\n' + flowers + '\n' + msg + '\n' + flowers + '\n'
-        assert captured.out == expected
+        assert captured == expected
 
     def test_print_end_msg(self, hdr: "StartStopHeader", capsys: Any,
+                           file_num: int,
                            dt_format: DT_Format) -> None:
-        hdr.print_end_msg(dt_format=dt_format,
-                          end='\n', file=sys.stdout, flush=False)
-        captured = capsys.readouterr()
+
+        if file_num == 0:
+            hdr.print_end_msg(dt_format=dt_format,
+                              end='\n', flush=False)
+            captured = capsys.readouterr().out
+        elif file_num == 1:
+            hdr.print_end_msg(dt_format=dt_format,
+                              file=None,
+                              end='\n', flush=False)
+            captured = capsys.readouterr().out
+        elif file_num == 2:
+            hdr.print_end_msg(dt_format=dt_format,
+                              end='\n', file=sys.stdout, flush=False)
+            captured = capsys.readouterr().out
+        else:
+            hdr.print_end_msg(dt_format=dt_format,
+                              end='\n', file=sys.stderr, flush=False)
+            captured = capsys.readouterr().err
+
         start_DT = hdr.start_DT
         end_DT = hdr.end_DT
         formatted_delta = str(end_DT - start_DT)
@@ -139,7 +181,7 @@ class TestStartStopHeader():
         msg2 += ' ' * (flower_len - len(msg2) - 1) + '*'
         expected = '\n' + flowers + '\n' + msg1 + '\n' + msg2 + '\n' +\
                    flowers + '\n'
-        assert captured.out == expected
+        assert captured == expected
 
 
 class TestTimeBox():
@@ -1929,3 +1971,111 @@ class TestTimeBox():
                                   print_end_to_use=print_end,
                                   use_stderr_to_use=use_stderr,
                                   static_TF_to_use=static_TF)
+
+
+class TestTimeBoxDocstrings():
+    def test_timebox_with_example_1(self) -> None:
+        print('#' * 50)
+        print('Example for StartStopHeader:')
+        print()
+        from sbt_utils.time_hdr import StartStopHeader
+        import time
+        import sys
+
+        def aFunc1() -> None:
+            print('2 + 2 =', 2+2)
+            time.sleep(2)
+
+        hdr = StartStopHeader('aFunc1')
+        hdr.print_start_msg(file=sys.stdout)
+
+        aFunc1()
+
+        hdr.print_end_msg(file=sys.stdout)
+
+    def test_timebox_with_example_2(self) -> None:
+        print('#' * 50)
+        print('Example for time_box decorator:')
+        print()
+        from sbt_utils.time_hdr import time_box
+        import time
+        import sys
+
+        @time_box(file=sys.stdout)
+        def aFunc2() -> None:
+            print('2 * 3 =', 2*3)
+            time.sleep(1)
+
+        aFunc2()
+
+    def test_timebox_with_example_3(self) -> None:
+        print('#' * 50)
+        print('Example of printing to stderr:')
+        print()
+        from sbt_utils.time_hdr import time_box
+        import sys
+
+        @time_box(file=sys.stderr)
+        def aFunc3() -> None:
+            print('this text printed to stdout, not stderr')
+
+        aFunc3()
+
+    def test_timebox_with_example_4(self) -> None:
+        print('#' * 50)
+        print('Example of statically wrapping function with time_box:')
+        print()
+
+        from sbt_utils.time_hdr import time_box
+        import sys
+
+        _tbe = False
+
+        @time_box(time_box_enabled=_tbe, file=sys.stdout)
+        def aFunc4a() -> None:
+            print('this is sample text for _tbe = False static example')
+
+        aFunc4a()  # aFunc4a is not wrapped by time box
+
+        _tbe = True
+
+        @time_box(time_box_enabled=_tbe, file=sys.stdout)
+        def aFunc4b() -> None:
+            print('this is sample text for _tbe = True static example')
+
+        aFunc4b()  # aFunc4b is wrapped by time box
+
+    def test_timebox_with_example_5(self) -> None:
+        print('#' * 50)
+        print('Example of dynamically wrapping function with time_box:')
+        print()
+
+        from sbt_utils.time_hdr import time_box
+        import sys
+
+        _tbe = True
+        def tbe() -> bool: return _tbe
+
+        @time_box(time_box_enabled=tbe, file=sys.stdout)
+        def aFunc5() -> None:
+            print('this is sample text for the tbe dynamic example')
+
+        aFunc5()  # aFunc5 is wrapped by time box
+
+        _tbe = False
+        aFunc5()  # aFunc5 is not wrapped by time_box
+
+    def test_timebox_with_example_6(self) -> None:
+        print('#' * 50)
+        print('Example of using different datetime format:')
+        print()
+
+        from sbt_utils.time_hdr import time_box
+
+        aDatetime_format: DT_Format = cast(DT_Format, '%m/%d/%y %H:%M:%S')
+
+        @time_box(dt_format=aDatetime_format)
+        def aFunc6() -> None:
+            print('this is sample text for the datetime format example')
+
+        aFunc6()

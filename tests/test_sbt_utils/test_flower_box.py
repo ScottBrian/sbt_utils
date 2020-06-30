@@ -11,7 +11,15 @@ import sys
 
 
 from sbt_utils.flower_box import print_flower_box_msg as print_flower_box_msg
-from typing import Any, List
+from typing import Any, cast, List
+
+file_num_list = [0, 1, 2, 3]
+
+
+@pytest.fixture(params=file_num_list)  # type: ignore
+def file_num(request: Any) -> int:
+    """Using different file arg"""
+    return cast(int, request.param)
 
 
 class TestFlowerBox():
@@ -168,7 +176,19 @@ class TestFlowerBox():
     @pytest.mark.parametrize('msg_list, expected_result',  # type: ignore
                              case_list)
     def test_flower_box(self, capsys: Any, msg_list: List[str],
-                        expected_result: str) -> None:
-        print_flower_box_msg(msg_list, file=sys.stdout)
-        captured = capsys.readouterr()
-        assert captured.out == expected_result
+                        expected_result: str,
+                        file_num: int) -> None:
+        if file_num == 0:
+            print_flower_box_msg(msg_list)
+            captured = capsys.readouterr().out
+        elif file_num == 1:
+            print_flower_box_msg(msg_list, file=None)
+            captured = capsys.readouterr().out
+        elif file_num == 2:
+            print_flower_box_msg(msg_list, file=sys.stdout)
+            captured = capsys.readouterr().out
+        else:
+            print_flower_box_msg(msg_list, file=sys.stderr)
+            captured = capsys.readouterr().err
+
+        assert captured == expected_result
