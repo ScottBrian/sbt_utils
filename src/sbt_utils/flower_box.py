@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+# =============================================================================
+# Created on Mon Mar 16 23:30:55 2020
+#
+# @author: Scott Tuttle
+# =============================================================================
+
 """
-Created on Mon Mar 16 23:30:55 2020
+==========
+flower_box
+==========
 
-@author: Scott Tuttle
+The flower_box module contains:
 
-The flower_box module contains one item:
-1) a print_flower_box_msg function which takes one of more lines of text as
-   input and prints the line or lines inside a flower box (asterisks) as a
-   visual aid in finding the text on the console or in a log.
+:function print_flower_box_msg: prints one or more lines of text in a flower
+    box (i.e., surrounded by asterisks).
 
-Examples for print_flower_box_msg:
-example 1: print a single line message in a flower box
+:Example: print a one line message in a flower box
 
 >>> from sbt_utils.flower_box import print_flower_box_msg
 
@@ -21,18 +27,6 @@ example 1: print a single line message in a flower box
 ***************************
 * This is my test message *
 ***************************
-
-example 2: print a two line message in a flower box
-
->>> from sbt_utils.flower_box import print_flower_box_msg
-
->>> msg_list = ['This is my first line test message', '   and my second line']
->>> print_flower_box_msg(msg_list)
-<BLANKLINE>
-**************************************
-* This is my first line test message *
-*    and my second line              *
-**************************************
 
 """
 
@@ -44,28 +38,52 @@ def print_flower_box_msg(msgs: Union[str, List[str]], *,
                          end: str = '\n',
                          file: Optional[Any] = None,
                          flush: bool = False) -> None:
-    """Print a single or multi-line message inside  flower box (asterisks).
+    """Print a single or multi-line message inside a flower box (asterisks).
 
-    :param msgs : single message or list of messages to print
+:param msgs: single message or list of messages to print
+:type msgs: str
 
-    :param end : end specification to use on the print call
+:param end: Specifies the argument to use on the print statement *end*
+    parameter. The default is \'\\\\n'.
+:type end: str, optional
 
-    :param file : file specification to use on the print call
+:param file: Specifies the argument to use on the print statement
+    *file* parameter. The default is
+    sys.stdout (via None).
+:type file: Optional[Any]
 
-    :param flush : flush specification to use on the print call
+:param flush: Specifies the argument to use on the print statement
+    *flush* parameterfor. The default is False.
+:type flush: bool, optional
 
-    :returns: None
+:returns: None
+:rtype: None
+
+:Example: print a two line message in a flower box
+
+>>> from sbt_utils.flower_box import print_flower_box_msg
+
+>>> msg_list = ['This is my first line test message', '   and my second line']
+>>> print_flower_box_msg(msg_list)
+<BLANKLINE>
+**************************************
+* This is my first line test message *
+*    and my second line              *
+**************************************
+
     """
 
-    """the following code that sets file to sys.stdout is needed to allow
-    the test cases to use the pytest capsys built-in fixture. Having
-    sys.stdout as the default parameter in the function definition does
-    not work because capsys changes sys.stdout after the test case gets
-    control, meaning the print statements in StartStopHeader code are not
-    captured. This is also appears to be the case for doctest.
-    So, we simply use None as the default and set file to sys.stdout here
-    which works fine.
-    """
+# =============================================================================
+#     Note: the following code that sets file to sys.stdout is needed to allow
+#     the test cases to use the pytest capsys built-in fixture. Having
+#     sys.stdout as the default parameter in the function definition does
+#     not work because capsys changes sys.stdout after the test case gets
+#     control, meaning the print statements in StartStopHeader code are not
+#     captured. This is also appears to be the case for doctest.
+#     So, we simply use None as the default and set file to sys.stdout here
+#     which works fine.
+# =============================================================================
+
     if file is None:
         file = sys.stdout
 
