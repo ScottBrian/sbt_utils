@@ -12,21 +12,16 @@
 flower_box
 ==========
 
-The flower_box module contains:
-
-:function print_flower_box_msg: prints one or more lines of text in a flower
-    box (i.e., surrounded by asterisks).
+With **print_flower_box_msg** you can print mesages in a flower_box like this:
 
 :Example: print a one line message in a flower box
 
 >>> from sbt_utils.flower_box import print_flower_box_msg
-
->>> msg = 'This is my test message'
->>> print_flower_box_msg(msg)
+>>> print_flower_box_msg('This is my message to the world')
 <BLANKLINE>
-***************************
-* This is my test message *
-***************************
+***********************************
+* This is my message to the world *
+***********************************
 
 """
 
@@ -40,24 +35,22 @@ def print_flower_box_msg(msgs: Union[str, List[str]], *,
                          flush: bool = False) -> None:
     """Print a single or multi-line message inside a flower box (asterisks).
 
-:param msgs: single message or list of messages to print
-:type msgs: str
+Args:
+    msgs: single message or list of messages to print
 
-:param end: Specifies the argument to use on the print statement *end*
-    parameter. The default is \'\\\\n'.
-:type end: str, optional
+    end: Specifies the argument to use on the print statement *end*
+        parameter. The default is \'\\\\n'.
 
-:param file: Specifies the argument to use on the print statement
-    *file* parameter. The default is
-    sys.stdout (via None).
-:type file: Optional[Any]
+    file: Specifies the argument to use on the print statement
+        *file* parameter. The default is
+        sys.stdout (via None).
 
-:param flush: Specifies the argument to use on the print statement
-    *flush* parameterfor. The default is False.
-:type flush: bool, optional
+    flush: Specifies the argument to use on the print statement
+        *flush* parameter. The default is False.
 
-:returns: None
-:rtype: None
+Returns:
+    None
+
 
 :Example: print a two line message in a flower box
 

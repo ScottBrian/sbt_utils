@@ -18,6 +18,11 @@ and elapsed time in a trailing flower box.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+.. image:: https://img.shields.io/badge/security-bandit-yellow.svg
+    :target: https://github.com/PyCQA/bandit
+    :alt: Security Status
+
+
 The flower_box.py module contains one importable item:
 
 1. print_flower_boxmsg function - takes one of more lines of text as input

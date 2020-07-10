@@ -14,13 +14,8 @@
 time_hdr
 ========
 
-The time_hdr module contains two items:
-
-    1) StartStopHeader class with two functions that will repectively print
-       a starting time and ending time messages in a flower box (see
-       flower_box module in sbt_utils package).
-    2) a time_box decorator that wraps a function and uses the StartStopHeader
-       to print the starting and ending time messages.
+With **@time_box**, you can decorate a function to be sandwiched between start
+and end time messages like this:
 
 :Example: decorate a function with time_box
 
@@ -43,6 +38,15 @@ The time_hdr module contains two items:
 * Ending aFunc2 on Mon Jun 29 2020 18:22:51 *
 * Elapsed time: 0:00:01.001204              *
 *********************************************
+
+
+The time_hdr module contains two items:
+
+    1) StartStopHeader class with two functions that will repectively print
+       a starting time and ending time messages in a flower box (see
+       flower_box module in sbt_utils package).
+    2) a time_box decorator that wraps a function and uses the StartStopHeader
+       to print the starting and ending time messages.
 
 time_box imports functools, sys, datetime, and wrapt
 
@@ -73,7 +77,7 @@ class StartStopHeader():
 
     While there might be some standalone uses for this class and its methods,
     its intended use is by the time_box decorator described later in this
-    time_hdr module.
+    module.
     """
 
     default_dt_format: DT_Format = DT_Format('%a %b %d %Y %H:%M:%S')
@@ -84,10 +88,8 @@ class StartStopHeader():
         :param func_name: The name of the function to appear in the start and
             stop messages
 
-        :type func_name: str
-
         :returns: None
-        :rtype: None
+
         """
 
         self.func_name = func_name
@@ -104,25 +106,24 @@ class StartStopHeader():
         (calculated as the difference between the end time and the saved start
         time - see the *print_start_msg* method).
 
-        :param dt_format: Specifies the datetime format to use in the end
-            time message. The default is StartStopHeader.default_dt_format.
-        :type dt_format: DT_Format, optional
+        Args:
+            dt_format: Specifies the datetime format to use in the end
+                time message. The default is StartStopHeader.default_dt_format.
 
-        :param end: Specifies the argument to use on the print statement *end*
-            parameter for the end time message. The default is \'\\\\n'.
-        :type end: str, optional
+            end: Specifies the argument to use on the print statement *end*
+                parameter for the end time message. The default is \'\\\\n'.
 
-        :param file: Specifies the argument to use on the print statement
-            *file* parameter for the end time message. The default is
-            sys.stdout (via None).
-        :type file: Optional[Any]
+            file: Specifies the argument to use on the print statement
+                *file* parameter for the end time message. The default is
+                sys.stdout (via None).
 
-        :param flush: Specifies the argument to use on the print statement
-            *flush* parameterfor the end time messsage. The default is False.
-        :type flush: bool, optional
+            flush: Specifies the argument to use on the print statement
+                *flush* parameterfor the end time messsage. The default is
+                False.
 
-        :returns: None
-        :rtype: None
+        Returns:
+            None
+
         """
 
         #  note: the following code that sets file to sys.stdout is needed to
@@ -154,25 +155,24 @@ class StartStopHeader():
         be used later to calculate the elapsed time for the *print_end_msg*
         invocation.
 
-        :param dt_format: Specifies the datetime format to use in the start
-            time message. The default is StartStopHeader.default_dt_format.
-        :type dt_format: DT_Format, optional
+        Args:
+            dt_format: Specifies the datetime format to use in the start
+                time message. The default is StartStopHeader.default_dt_format.
 
-        :param end: Specifies the argument to use on the print statement *end*
-            parameter for the start time message. The default is \'\\\\n'.
-        :type end: str, optional
+            end: Specifies the argument to use on the print statement *end*
+                parameter for the start time message. The default is \'\\\\n'.
 
-        :param file: Specifies the argument to use on the print statement
-            *file* parameter for the start time message. The default is
-            sys.stdout (via None).
-        :type file: Optional[Any]
+            file: Specifies the argument to use on the print statement
+                *file* parameter for the start time message. The default is
+                sys.stdout (via None).
 
-        :param flush: Specifies the argument to use on the print statement
-            *flush* parameterfor the start time messsage. The default is False.
-        :type flush: bool, optional
+            flush: Specifies the argument to use on the print statement
+                *flush* parameterfor the start time messsage. The default is
+                False.
 
-        :returns: None
-        :rtype: None
+        Returns:
+            None
+
 
         :Example: Using StartStopHeader with start and end messages.
 
@@ -244,73 +244,49 @@ def time_box(*,
 def time_box(wrapped: Optional[F] = None, *,
              dt_format: DT_Format = StartStopHeader.default_dt_format,
              end: str = '\n',
-             # file: Any = sys.stdout,
              file: Optional[Any] = None,
              flush: bool = False,
              time_box_enabled: Union[bool, Callable[..., bool]] = True
              ) -> F:
     """Decorator to wrap a function in start time and end time messages.
 
-    The time_box decorator can be invoked with or with arguments, and the
-    function being wrapped can optionally take arguments and optionally
-    return a value. The wrapt.decorator is used to preserve the wrapped
-    function introspection capabilities, and functools.partial is used to
-    handle the case where decorator arguments are specified. The examples
-    further below will help demonstrate the various ways in which the
-    time_box decorator can be used.
+The time_box decorator can be invoked with or with arguments, and the
+function being wrapped can optionally take arguments and optionally
+return a value. The wrapt.decorator is used to preserve the wrapped
+function introspection capabilities, and functools.partial is used to
+handle the case where decorator arguments are specified. The examples
+further below will help demonstrate the various ways in which the
+time_box decorator can be used.
 
-:param wrapped: Any callable function that accepts optional positional
-    and/or optional keyword arguments, and optionally returns a value.
-    The default is None, which will be the case when the pie decorator
-    version is used with any of the following arguments specified.
-:type wrapped: Callable[..., Any], optional
+Args:
+    wrapped: Any callable function that accepts optional positional
+        and/or optional keyword arguments, and optionally returns a value.
+        The default is None, which will be the case when the pie decorator
+        version is used with any of the following arguments specified.
 
-:param dt_format: Specifies the datetime format to use in the start
-    time message. The default is StartStopHeader.default_dt_format.
-:type dt_format: DT_Format, optional
+    dt_format: Specifies the datetime format to use in the start
+        time message. The default is StartStopHeader.default_dt_format.
 
-:param end: Specifies the argument to use on the print statement *end*
-    parameter for the start time and end time messages issued by the
-    StratStopHeader methods . The default is \'\\\\n'.
-:type end: str, optional
+    end: Specifies the argument to use on the print statement *end*
+        parameter for the start time and end time messages issued by the
+        StratStopHeader methods . The default is \'\\\\n'.
 
-:param file: Specifies the argument to use on the print statement
-    *file* parameter for the start time and end time messages issued by
-    the StratStopHeader methods . The default is
-    sys.stdout (via None).
-:type file: Optional[Any]
+    file: Specifies the argument to use on the print statement
+        *file* parameter for the start time and end time messages issued by
+        the StratStopHeader methods . The default is
+        sys.stdout (via None).
 
-:param flush: Specifies the argument to use on the print statement
-    *flush* parameterfor the start time and end time messages issued by
-    the StratStopHeader methods . The default is False.
-:type flush: bool, optional
+    flush: Specifies the argument to use on the print statement
+        *flush* parameterfor the start time and end time messages issued by
+        the StratStopHeader methods . The default is False.
 
-:param time_box_enabled: Specifies whether the start and end messages
-    should be issued (True) or not (False). The default is True.
-:type time_box_enabled: Union[bool, Callable[..., bool]], optional
+    time_box_enabled: Specifies whether the start and end messages
+        should be issued (True) or not (False). The default is True.
 
-:returns: A callable function that issues a starting time message, calls
+Returns:
+    A callable function that issues a starting time message, calls
     the wrapped function, issues the ending time message, and finally
     returns the return value from the wrapped function, if one.
-:rtype: Callable[..., Any]
-
-
-
-:Example: printing to stderr
-
-note: the examples only show the output going to stdout
-
-
-
->>> from sbt_utils.time_hdr import time_box
->>> import sys
-
->>> @time_box(file=sys.stderr)
-... def aFunc3() -> None:
-...      print('this text printed to stdout, not stderr')
-
->>> aFunc3()
-this text printed to stdout, not stderr
 
 
 :Example: statically wrapping function with time_box
