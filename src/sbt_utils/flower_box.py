@@ -26,12 +26,12 @@ With **print_flower_box_msg** you can print mesages in a flower_box like this:
 """
 
 import sys
-from typing import Any, List, Optional, Union
+from typing import List, Optional, TextIO, Union
 
 
 def print_flower_box_msg(msgs: Union[str, List[str]], *,
                          end: str = '\n',
-                         file: Optional[Any] = None,
+                         file: Optional[TextIO] = None,
                          flush: bool = False) -> None:
     """Print a single or multi-line message inside a flower box (asterisks).
 

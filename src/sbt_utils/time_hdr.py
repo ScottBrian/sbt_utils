@@ -15,7 +15,7 @@ time_hdr
 ========
 
 With **@time_box**, you can decorate a function to be sandwiched between start
-and end time messages like this:
+time and end time messages like this:
 
 :Example: decorate a function with time_box
 
@@ -56,7 +56,7 @@ import functools
 import sys
 from datetime import datetime
 from typing import Any, Callable, cast, Dict, NewType, Optional, \
-                   Tuple, TypeVar, Union
+                   TextIO, Tuple, TypeVar, Union
 
 from typing import overload
 
@@ -98,7 +98,7 @@ class StartStopHeader():
 
     def print_end_msg(self, dt_format: DT_Format = default_dt_format,
                       end: str = '\n',
-                      file: Optional[Any] = None,
+                      file: Optional[TextIO] = None,
                       flush: bool = False) -> None:
         """The end time message is issued in a flower box
 
@@ -147,7 +147,7 @@ class StartStopHeader():
 
     def print_start_msg(self, dt_format: DT_Format = default_dt_format,
                         end: str = '\n',
-                        file: Optional[Any] = None,
+                        file: Optional[TextIO] = None,
                         flush: bool = False) -> None:
         """The start time message is issued in a flower box.
 
@@ -225,7 +225,7 @@ F = TypeVar('F', bound=Callable[..., Any])
 def time_box(wrapped: F, *,
              dt_format: DT_Format = StartStopHeader.default_dt_format,
              end: str = '\n',
-             file: Any = sys.stdout,
+             file: Optional[TextIO] = None,
              flush: bool = False,
              time_box_enabled: Union[bool, Callable[..., bool]] = True
              ) -> F: ...
@@ -235,7 +235,7 @@ def time_box(wrapped: F, *,
 def time_box(*,
              dt_format: DT_Format = StartStopHeader.default_dt_format,
              end: str = '\n',
-             file: Any = sys.stdout,
+             file: Optional[TextIO] = None,
              flush: bool = False,
              time_box_enabled: Union[bool, Callable[..., bool]] = True
              ) -> Callable[[F], F]: ...
@@ -244,13 +244,13 @@ def time_box(*,
 def time_box(wrapped: Optional[F] = None, *,
              dt_format: DT_Format = StartStopHeader.default_dt_format,
              end: str = '\n',
-             file: Optional[Any] = None,
+             file: Optional[TextIO] = None,
              flush: bool = False,
              time_box_enabled: Union[bool, Callable[..., bool]] = True
              ) -> F:
     """Decorator to wrap a function in start time and end time messages.
 
-The time_box decorator can be invoked with or with arguments, and the
+The time_box decorator can be invoked with or without arguments, and the
 function being wrapped can optionally take arguments and optionally
 return a value. The wrapt.decorator is used to preserve the wrapped
 function introspection capabilities, and functools.partial is used to
@@ -269,16 +269,16 @@ Args:
 
     end: Specifies the argument to use on the print statement *end*
         parameter for the start time and end time messages issued by the
-        StratStopHeader methods . The default is \'\\\\n'.
+        StartStopHeader methods . The default is \'\\\\n'.
 
     file: Specifies the argument to use on the print statement
         *file* parameter for the start time and end time messages issued by
-        the StratStopHeader methods . The default is
+        the StartStopHeader methods . The default is
         sys.stdout (via None).
 
     flush: Specifies the argument to use on the print statement
         *flush* parameterfor the start time and end time messages issued by
-        the StratStopHeader methods . The default is False.
+        the StartStopHeader methods . The default is False.
 
     time_box_enabled: Specifies whether the start and end messages
         should be issued (True) or not (False). The default is True.
