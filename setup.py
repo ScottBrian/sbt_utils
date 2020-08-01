@@ -14,22 +14,26 @@ with open('README.rst', 'r') as readme:
 
 setup(
       name='sbt_utils',
-      version='0.0.1',
+      version='1.0.0',
       author='Scott Tuttle',
-      # author_email='sbtuttle@outlook.com',
-      description='A set of utilities',
+      author_email='sbtuttle@outlook.com',
+      description='Print header/trailure utilities',
       long_description=long_description,
-      long_description_content_type='text/markdown',
+      long_description_content_type='text/x-rst',
       url='https://github.com/ScottBrian/sbt_utils.git',
       classifiers=[
           'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
           'Licence :: OSI Approved :: MIT Licence',
-          'Operating System :: OS Independent'
+          'Operating System :: POSIX :: Linux'
                   ],
+      project_urls={
+          'Source': 'https://github.com/ScottBrian/sbt_utils.git'},
       python_requires='>=3.6',
       packages=find_packages('src'),
       package_dir={'': 'src'},
       install_requires=['wrapt'],
-      package_data={"sbt_utils": ["py.typed"]},
+      package_data={"sbt_utils": ["__init__.pyi", "py.typed"]},
       zip_safe=False
      )

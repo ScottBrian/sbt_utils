@@ -55,11 +55,9 @@ The time_hdr.py module contains:
 Installation
 ============
 
-The sbt-utils project will hopefully be placed in pypi in the near future
-
 Linux:
 
-``pip install sbt-utils``
+``pip install sbt_utils``
 
 
 Usage examples:
@@ -120,8 +118,8 @@ See tox.ini
 Release History
 ===============
 
-* 0.0.1
-    * Work in progress
+* 1.0.0
+    * Initial release
 
 Meta
 ====

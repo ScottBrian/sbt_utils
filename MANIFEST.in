@@ -1,0 +1,13 @@
+include LICENSE
+include mypy.ini
+include pytest.ini
+include tox.ini
+recursive-include docs *.bat
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs Makefile
+recursive-include src *.py
+recursive-include tests *.py
+recursive-include wrapt *.py
+recursive-include wrapt *.pyi
+
